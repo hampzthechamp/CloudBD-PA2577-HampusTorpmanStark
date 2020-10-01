@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+nodes = [
+  {'hostname' => 'appserver'},
+  {'hostname' => 'dbserver'}
+  ]
+
+Vagrant.configure("2") do |config|
+
+  config.vm.provider :digital_ocean
+  
+  config.vm.provider "virtualbox"
+    config.vm.box = "bento/ubuntu-18.04"
+
+
+  config.vm.provider :digital_ocean do |provider, override|
+    override.ssh.private_key_path = '~/.ssh/id_rsa'
+    override.vm.box = 'digital_ocean'
+    override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    override.nfs.functional = false
+    override.vm.allowed_synced_folder_types = :rsync
+    provider.token = 'd286d62888414a35c9eeef6a2b76c9d987fed5d15c9817b6c37787c975771222' # <---- ÄNDRA TILL VAR
+    provider.image = 'ubuntu-18-04-x64'
+    provider.region = 'lon1'
+    provider.size = '512mb'
+    provider.setup = false
+  end
+
+  config.puppet_install.puppet_version = :latest 
+    config.vm.provision :puppet do |puppet|
+      puppet.manifests_path = 'puppet/manifests'
+      puppet.module_path = 'puppet/modules'
+    end
+
+  nodes.each do |node|
+    config.vm.define node['hostname'] do |nodeconfig|
+      nodeconfig.vm.hostname = node['hostname'] + '.bo'
+    end
+  end
+
+end
+
+
