@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
     override.nfs.functional = false
     override.vm.allowed_synced_folder_types = :rsync
-    provider.token = 'd286d62888414a35c9eeef6a2b76c9d987fed5d15c9817b6c37787c975771222' # <---- ÄNDRA TILL VAR
+    provider.token = 'TOKEN' # <---- ÄNDRA TILL VAR
     provider.image = 'ubuntu-18-04-x64'
     provider.region = 'lon1'
     provider.size = '512mb'
